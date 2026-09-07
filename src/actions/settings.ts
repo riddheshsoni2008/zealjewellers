@@ -21,22 +21,7 @@ export interface RateSettingsData {
 
 // In-Memory Caching per Tenant to eliminate DB latency
 const cachedRateDataMap = new Map<string, { data: RateSettingsData; time: number }>();
-const CACHE_TTL_MS = 60000;
-
-// Helper to drop legacy 'rates' collection from MongoDB if it exists
-async function cleanupLegacyRatesCollection() {
-  try {
-    if (mongoose.connection.db) {
-      const collections = await mongoose.connection.db.listCollections({ name: "rates" }).toArray();
-      if (collections.length > 0) {
-        await mongoose.connection.db.dropCollection("rates");
-        console.log("Legacy rates collection dropped successfully.");
-      }
-    }
-  } catch (e) {
-    // Ignore if already dropped
-  }
-}
+const CACHE_TTL_MS = 300000; // 5 minutes
 
 export async function getRateSettings(): Promise<ActionResult<RateSettingsData>> {
   try {
@@ -54,15 +39,21 @@ export async function getRateSettings(): Promise<ActionResult<RateSettingsData>>
     }
 
     await connectDB();
-    await cleanupLegacyRatesCollection();
 
-    let user = await User.findById(tenantId).lean();
+    let user = await User.findById(tenantId)
+      .select("goldRate22k goldRate18k silverRate shopName name email updatedAt")
+      .lean();
 
     if (!user) {
-      user = await User.findOne({ role: "admin" }).sort({ createdAt: 1 }).lean();
+      user = await User.findOne({ role: "admin" })
+        .sort({ createdAt: 1 })
+        .select("goldRate22k goldRate18k silverRate shopName name email updatedAt")
+        .lean();
     }
     if (!user && session?.user?.id) {
-      user = await User.findById(session.user.id).lean();
+      user = await User.findById(session.user.id)
+        .select("goldRate22k goldRate18k silverRate shopName name email updatedAt")
+        .lean();
     }
 
     const formatted: RateSettingsData = {
@@ -105,7 +96,6 @@ export async function updateRateSettings(
     }
 
     await connectDB();
-    await cleanupLegacyRatesCollection();
 
     const updateData: Record<string, any> = {
       goldRate22k: validated.data.goldRate22k,

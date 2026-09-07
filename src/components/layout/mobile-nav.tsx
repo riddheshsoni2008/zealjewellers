@@ -102,6 +102,7 @@ export function MobileNav({ isOpen, onClose, user, shopName }: MobileNavProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={true}
                 onClick={onClose}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
