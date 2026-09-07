@@ -63,8 +63,9 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        serif: ["var(--font-serif)", "Georgia", "serif"],
+        sans: ["'Baloo Bhai 2'", "sans-serif"],
+        serif: ["'Baloo Bhai 2'", "serif"],
+        baloo: ["'Baloo Bhai 2'", "sans-serif"],
       },
     },
   },

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -52,11 +54,16 @@
 @layer base {
   * {
     border-color: var(--border);
+    font-family: 'Baloo Bhai 2', cursive, sans-serif;
   }
-  body {
+  html, body {
+    font-family: 'Baloo Bhai 2', cursive, sans-serif;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5, h6, p, span, a, button, input, select, textarea, label, table, th, td {
+    font-family: 'Baloo Bhai 2', cursive, sans-serif;
   }
 }
 
